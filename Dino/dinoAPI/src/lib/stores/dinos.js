@@ -1,20 +1,37 @@
-// src/lib/stores/dinos.js
-import { writable } from 'svelte/store';
-import { fetchAllDinos } from '$lib/services/dinoAPI.js';
+import { writable } from "svelte/store";
+import { fetchDinoNames, fetchSingleDino } from "$lib/services/dinoAPI.js";
 
-export const dinos = writable([]);
+export const dinoNames = writable([]);
+export const selectedDinos = writable([]);
 export const loading = writable(false);
-export const error = writable('');
+export const error = writable("");
 
-export async function loadDinos() {
+// Lade namen van de Bruno API
+export async function loadDinoNames() {
   loading.set(true);
-  error.set('');
+  error.set("");
+
   try {
-    const data = await fetchAllDinos();
-    dinos.set(data);
+    const names = await fetchDinoNames();
+    dinoNames.set(names);
   } catch (e) {
-    console.error(e);
-    error.set('Kon dino-data niet laden');
+    error.set("Kon dino-namen niet laden.");
+  } finally {
+    loading.set(false);
+  }
+}
+
+// 1 dinosaurus toevoegen aan compare
+export async function loadSingleDino(name) {
+  loading.set(true);
+
+  try {
+    const dino = await fetchSingleDino(name);
+    if (dino) {
+      selectedDinos.update(list => [...list, dino]);
+    }
+  } catch (e) {
+    error.set("Kon dinosaurus niet laden.");
   } finally {
     loading.set(false);
   }

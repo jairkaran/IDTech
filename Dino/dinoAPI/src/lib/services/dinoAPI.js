@@ -1,120 +1,60 @@
-// src/lib/services/dinoAPI.js
+// src/lib/services/dinoApi.js
 import { getJSON } from './http.js';
 
-// Basis-URL's
-const BRUNO_BASE = 'https://dinoapi.brunosouzadev.com/api';
-// const HOOK_BASE  = 'https://dino-facts.hookerhillstudios.com/api';
-const GB_BASE    = 'https://raw.githubusercontent.com/GeorgeBetts/Dinosaur-API/master';
+// -----------------------------
+//  MAIN SOURCE: BRUNO DINO API
+// -----------------------------
+const BRUNO_BASE = "https://dinoapi.brunosouzadev.com/api/dinosaurs";
 
-// Kleine hulpfuncties
-function toNum(x) {
-  const n = Number(x);
-  return Number.isFinite(n) ? n : null;
+// Helpers
+function makeId(name) {
+  return (name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
-function makeId(name, src) {
-  return `${name}`.toLowerCase().replace(/[^a-z0-9]+/g, '-') + `__${src}`;
+// Normalizer voor Bruno API (18 dinos)
+function normalizeBruno(dino) {
+  return {
+    id: dino.id ?? makeId(dino.name),
+    name: dino.name ?? "Unknown",
+    description: dino.description ?? null,
+    image: dino.image_url ?? null,
+    length_m: dino.length ?? null,
+    weight_kg: dino.weight ?? null,
+    diet: dino.diet ?? null,
+    period: dino.time_period ?? null,
+    source: "bruno"
+  };
 }
 
-/* ====================================================
-   1. Bruno Souza Dev – DinoAPI
-   ==================================================== */
-async function fetchBrunoAll() {
-  try {
-    const data = await getJSON(`${BRUNO_BASE}/dinosaurs`);
-    return data.map(dino => ({
-      id: dino.id?.toString() || makeId(dino.name, 'bruno'),
-      name: dino.name ?? 'Unknown',
-      period: dino.period ?? null,
-      diet: dino.diet ?? null,
-      type: dino.type ?? null,
-      family: dino.family ?? null,
-      length_m: toNum(dino.length),
-      height_m: toNum(dino.height),
-      weight_kg: toNum(dino.weight),
-      region: dino.region ?? null,
-      image: dino.image ?? null,
-      source: 'bruno'
-    }));
-  } catch (err) {
-    console.warn('Bruno API mislukt:', err.message);
-    return [];
-  }
+// -----------------------------
+// 1. Haal ALLE dinos op (18 entries)
+// -----------------------------
+export async function fetchDinoList() {
+  const res = await getJSON(BRUNO_BASE);
+
+  if (!Array.isArray(res)) return [];
+
+  return res.map(normalizeBruno);
 }
 
-// async function fetchHookAll() {
-//   try {
-//     const data = await getJSON(`${HOOK_BASE}/dinosaurs`);
-//     return data.map(dino => ({
-//       id: makeId(dino.name, 'hookerhill'),
-//       name: dino.name ?? 'Unknown',
-//       period: dino.period ?? null,
-//       diet: dino.diet ?? null,
-//       type: dino.type ?? null,
-//       family: dino.family ?? null,
-//       length_m: toNum(dino.length),
-//       height_m: toNum(dino.height),
-//       weight_kg: toNum(dino.weight),
-//       region: dino.region ?? null,
-//       image: dino.image ?? null,
-//       source: 'hookerhill'
-//     }));
-//   } catch (err) {
-//     console.warn('HookerHill API mislukt:', err.message);
-//     return [];
-//   }
-// }
+// -----------------------------
+// 2. Haal details op van één dinosaurus
+// Bruno API heeft GEEN detail endpoint
+// Dus we gebruiken de lijst voor details
+// -----------------------------
+export async function fetchSingleDino(name) {
+  const all = await fetchDinoList();
 
-/* ====================================================
-   3. George Betts – Dinosaur API (GitHub)
-   ==================================================== */
-async function fetchGBAll() {
-  try {
-    const data = await getJSON(`${GB_BASE}/data/dinosaurs.json`);
-    return data.map(dino => ({
-      id: makeId(dino.name, 'georgebetts'),
-      name: dino.name ?? 'Unknown',
-      period: dino.period ?? null,
-      diet: dino.diet ?? null,
-      type: dino.type ?? null,
-      family: dino.family ?? null,
-      length_m: toNum(dino.length),
-      height_m: toNum(dino.height),
-      weight_kg: toNum(dino.weight),
-      region: dino.region ?? null,
-      image: null, // meestal geen afbeeldingen aanwezig
-      source: 'georgebetts'
-    }));
-  } catch (err) {
-    console.warn('GeorgeBetts API mislukt:', err.message);
-    return [];
-  }
+  return all.find(dino => dino.name === name) ?? null;
 }
 
-/* ====================================================
-   4. Samengevoegde functie
-   ==================================================== */
-export async function fetchAllDinos() {
-  const [bruno, george] = await Promise.all([
-    fetchBrunoAll(),
-    fetchGBAll()
-  ]);
-
-  // Combineer alle resultaten
-//   const all = [...bruno, ...hooker, ...george];
-    const all = [...bruno, ...george];
-  
-
-  // Verwijder duplicaten op basis van naam + periode
-  const seen = new Set();
-  const deduped = [];
-  for (const d of all) {
-    const key = `${d.name?.toLowerCase()}__${d.period || 'n/a'}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      deduped.push(d);
-    }
-  }
-
-  return deduped;
+// -----------------------------
+// 3. Alleen namen ophalen
+// -----------------------------
+export async function fetchDinoNames() {
+  const list = await fetchDinoList();
+  return list.map(dino => dino.name).sort((a, b) => a.localeCompare(b));
 }

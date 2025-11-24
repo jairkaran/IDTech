@@ -1,5 +1,5 @@
+// src/lib/services/http.js
 export async function getJSON(url, timeoutMs = 8000) {
-  // AbortController voor een eenvoudige timeout
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -10,11 +10,12 @@ export async function getJSON(url, timeoutMs = 8000) {
       throw new Error(`Fout ${res.status} bij ophalen van ${url}`);
     }
 
-    const data = await res.json();
-    return data;
+    return await res.json();
+
   } catch (err) {
-    console.error('Fetch-fout:', err.message);
+    console.error("Fetch-fout:", err.message);
     throw err;
+
   } finally {
     clearTimeout(timeout);
   }
