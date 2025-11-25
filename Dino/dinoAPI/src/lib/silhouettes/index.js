@@ -1,0 +1,17 @@
+export { default as Aardonyx } from './aardonyx.svg';
+export { default as Abelisaurus } from './abelisaurus.svg';
+export { default as Abrictosaurus } from './abrictosaurus.svg';
+export { default as Abrosaurus } from './abrosaurus.svg';
+export { default as Abydosaurus } from './abydosaurus.svg';
+export { default as Acanthopholis } from './acanthopholis.svg';
+export { default as Achelousaurus } from './achelousaurus.svg';
+export { default as Acheroraptor } from './acheroraptor.svg';
+export { default as Achillobator } from './achillobator.svg';
+export { default as Acristavus } from './acristavus.svg';
+export { default as Acrocanthosaurus } from './acrocanthosaurus.svg';
+export { default as Adamantisaurus } from './adamantisaurus.svg';
+export { default as Adasaurus } from './adasaurus.svg';
+export { default as Adeopapposaurus } from './adeopapposaurus.svg';
+export { default as Adynomosaurus } from './adynomosaurus.svg';
+export { default as Aegyptosaurus } from './aegyptosaurus.svg';
+export { default as Human } from './human.svg';
