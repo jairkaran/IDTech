@@ -20,7 +20,7 @@ function normalizeBruno(dino) {
     id: dino.id ?? makeId(dino.name),
     name: dino.name ?? "Unknown",
     description: dino.description ?? null,
-    image: dino.image_url ?? null,
+    image: dino.image ?? null,
     length_m: dino.length ?? null,
     weight_kg: dino.weight ?? null,
     diet: dino.diet ?? null,

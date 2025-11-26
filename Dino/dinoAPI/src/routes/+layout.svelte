@@ -9,40 +9,46 @@
 </script>
 
 <style>
-  /* --- GLOBAL GITHUB STYLE FONT --- */
+  /* GLOBAL FIX — voorkom overflow door padding */
+  :global(*) {
+    box-sizing: border-box;
+  }
+
   :global(body) {
     font-family:
       -apple-system, BlinkMacSystemFont,
       "Segoe UI", Helvetica, Arial, sans-serif,
       "Apple Color Emoji", "Segoe UI Emoji";
     margin: 0;
-    background: #f3f3f3; /* backup achtergrond */
+    background: #f3f3f3;
   }
 
-  /* --- NAVBAR --- */
+  /* NAVBAR */
   nav {
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
+
     width: 100%;
+    max-width: 1400px;      /* voorkomt overflow */
+    margin: 0 auto;          /* centreert navbar */
+
     height: 64px;
+    padding-inline: 1.5rem;  /* veiliger dan 2rem */
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    padding: 0 2rem;
 
     background: linear-gradient(
       rgba(0, 0, 0, 0.7),
       rgba(0, 0, 0, 0)
     );
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 
     z-index: 1000;
   }
 
-  /* --- LOGO --- */
   .logo {
     display: flex;
     align-items: center;
@@ -59,7 +65,6 @@
     border-radius: 50%;
   }
 
-  /* --- LINKS --- */
   .links {
     display: flex;
     align-items: center;
@@ -70,16 +75,10 @@
     position: relative;
     color: white;
     text-decoration: none;
-    padding: 4px 0;
     font-size: 1.05rem;
     font-weight: 600;
-    display: flex;
-    gap: 6px;
+    padding: 4px 0;
     transition: opacity 0.2s ease;
-  }
-
-  .nav-link:hover {
-    opacity: 0.7;
   }
 
   .nav-link::after {
@@ -89,8 +88,12 @@
     bottom: -3px;
     width: 0%;
     height: 2px;
-    background: #05330b;
-    transition: width 0.2s ease;
+    background: #095024;
+    transition: width 0.25s ease;
+  }
+
+  .nav-link:hover {
+    opacity: 0.7;
   }
 
   .nav-link:hover::after {
@@ -98,44 +101,41 @@
   }
 
   .active {
-    color: #095024;
+    color: #94d3a2;
   }
 
   .active::after {
     width: 100%;
   }
 
+  /* MOBILE */
   @media (max-width: 750px) {
     .links {
       display: none;
+      flex-direction: column;
       position: absolute;
       top: 64px;
       right: 0;
-      width: 200px;
+      background: rgba(0,0,0,0.8);
       padding: 1rem;
-      flex-direction: column;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(10px);
       border-bottom-left-radius: 12px;
     }
 
     .links.open {
       display: flex;
     }
-
-    .burger {
-      display: flex;
-    }
   }
 
   .content {
-    padding-top: 80px;
+    padding-top: 80px; /* ruimte voor fixed navbar */
+    max-width: 1400px;
+    margin: 0 auto;
   }
 </style>
 
 <nav>
   <a class="logo" href="/">
-    <img src="/logo.png" alt="logo">
+    <img src="/logo.png" alt="logo" />
     DinoAPI
   </a>
 
