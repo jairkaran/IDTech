@@ -4,7 +4,6 @@
 
 <style>
   .body {
-    background-image: url('./bimage.png');
     background-size: cover;
     background-position: center;
   }
@@ -13,7 +12,7 @@
     position: relative;
     width: 100%;
     height: 70vh;
-    background-image: url('./bimage.png');
+    background-image: url('./assets/bimage.png');
     background-size: cover;
     background-position: center;
     border-radius: 20px;
