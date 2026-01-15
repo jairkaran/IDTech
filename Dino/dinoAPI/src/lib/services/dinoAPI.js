@@ -15,19 +15,35 @@ function makeId(name) {
 }
 
 // Normalizer voor Bruno API (18 dinos)
+
 function normalizeBruno(dino) {
   return {
-    id: dino.id ?? makeId(dino.name),
+    id: dino._id ?? dino.id ?? makeId(dino.name),
     name: dino.name ?? "Unknown",
     description: dino.description ?? null,
-    image: dino.image ?? null,
-    length_m: dino.length ?? null,
-    weight_kg: dino.weight ?? null,
+
+    // image kan "image" of "image_url" zijn
+    image: dino.image ?? dino.image_url ?? null,
+
+    // app gebruikt soms weight_kg; sommige APIs geven weight als string
+    weight_kg: dino.weight_kg ?? dino.weight ?? null,
+
+    // optioneel
+    length_m: dino.length_m ?? dino.length ?? null,
+    height_m: dino.height_m ?? dino.height ?? null,
+
     diet: dino.diet ?? null,
-    period: dino.time_period ?? null,
+    period: dino.period ?? dino.time_period ?? null,
+
+    // BELANGRIJK: region voor de kaart
+    region: (dino.region ?? dino.continent ?? dino.location ?? null),
+
+    existed: dino.existed ?? dino.temporalRange ?? null,
+
     source: "bruno"
   };
 }
+
 
 // -----------------------------
 // 1. Haal ALLE dinos op (18 entries)

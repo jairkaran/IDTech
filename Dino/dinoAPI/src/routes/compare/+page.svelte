@@ -3,6 +3,9 @@
   import DinoCard from '$lib/components/DinoCard.svelte';
   import WeightChart from '$lib/components/WeightChart.svelte';
   import FilterBar from '$lib/components/FilterBar.svelte';
+  import RegionMap from '$lib/components/RegionMap.svelte';
+  import DinoTimeline from "$lib/components/DinoTimeline.svelte";
+
 
   import {
     allDinos,
@@ -75,6 +78,12 @@
   <div class="chart-container">
     <h2>Gewicht vergelijking</h2>
     <WeightChart dinos={selectedList} />
+
+    <h2>Herkomst regio's</h2>
+    <RegionMap dinos={selectedList} />
+
+    <h2>Tijdlijn</h2>
+    <DinoTimeline dinos={selectedList} />
   </div>
 {/if}
 
