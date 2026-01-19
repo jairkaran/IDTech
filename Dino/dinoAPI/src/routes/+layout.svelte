@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { injectAnalytics } from '@vercel/analytics/sveltekit';
   let menuOpen = false;
   let current = "/";
 
